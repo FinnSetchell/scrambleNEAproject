@@ -31,6 +31,7 @@ scene("startGame", () => {
   });
 
   keyRelease("enter", () => {
+    console.log('GO: "gamemode"')
     go("gamemode", { playerName: nameField.text });
   })
 
@@ -62,6 +63,7 @@ scene("gamemode", ({ playerName }) => {
     if (gameModeField.text === "daily") {
       go("dailyMain", { playerName });
     } else {
+      console.log('GO: "unlimitedMain"')
       go("unlimitedMain", { playerName });
     }
   })
@@ -135,6 +137,7 @@ scene("unlimitedMain", ({ playerName }) => {
     for (i = 0; i < gridSize; i++) {
       for (j = 0; j < gridSize; j++) {
         grid[i, j] = scrabbleLetters[Math.floor(Math.random() * scrabbleLetters.length)];
+        console.log(grid[i,j])
       }
     }
     //findWords(gridSize, grid, 3, true);
@@ -235,7 +238,7 @@ scene("unlimitedMain", ({ playerName }) => {
 });
 
 
-function drawGrid(gridCells, gridSize, boardWidth) {
+function drawGrid(gridCells, gridSize, boardWidth, grid) {
   let gapSize = (boardWidth/gridSize)/8
   let cellSize = (boardWidth/gridSize) - gapSize
   
@@ -252,19 +255,17 @@ function drawGrid(gridCells, gridSize, boardWidth) {
       gridCells.push({ index: i, x: i*cellSize + gapSize, y: j*cellSize + gapSize, width: cellSize, height: cellSize })
     }
   }
-  createTextBoxesForGrid(gridCells);
+  createTextBoxesForGrid(gridCells, grid);
 }
 
-function createTextBoxesForGrid(gridCells){
+function createTextBoxesForGrid(gridCells, grid){
   gridCells.forEach((cell)=>{
     let x = cell.x + cell.width*0.5;
     let y = cell.y + cell.height*0.55;
     cell.textBox = add([
-      text('A', 40),
+      text(grid[cell.x, cell.y], 40),
       pos(x, y),
       origin('center')
     ]);
   })
 }
-
-      
